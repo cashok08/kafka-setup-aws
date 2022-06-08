@@ -10,4 +10,9 @@
 terraform login
 # Get the token from the UI and complete it
 terraform init
+terraform plan
+terraform apply --auto-approve
+
+# For terraform console 
+terraform console
 ```
