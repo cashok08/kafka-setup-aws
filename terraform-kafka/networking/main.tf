@@ -21,6 +21,10 @@ resource "aws_vpc" "kafka_vpc" {
   tags = {
       Name = "kafka_vpc-${random_integer.random.id}"
   }
+  # Added the lifecycle hook to ensure tf is not crashed
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_subnet" "kafka_subnet" {
@@ -44,7 +48,7 @@ resource "aws_subnet" "kafka_subnet" {
 }
 
 # Associate every subnet to route table 
-
+# Step 4
 resource "aws_route_table_association" "kafka_public_assoc" {
     count = 3
     subnet_id = aws_subnet.kafka_subnet.*.id[count.index]
@@ -52,6 +56,7 @@ resource "aws_route_table_association" "kafka_public_assoc" {
   
 }
 
+# Step 1
 resource "aws_internet_gateway" "kafka_internet_gateway" {
   vpc_id = aws_vpc.kafka_vpc.id
 
@@ -60,6 +65,7 @@ resource "aws_internet_gateway" "kafka_internet_gateway" {
   }
 }
 
+# Step 2
 resource "aws_route_table" "kafka_public_rt" {
   vpc_id = aws_vpc.kafka_vpc.id
 
@@ -69,7 +75,8 @@ resource "aws_route_table" "kafka_public_rt" {
 }
 
 
-  # This is not the same as subnet default route table
+  # Step 3 
+  #This is not the same as subnet default route table
 resource "aws_route" "default_route" {
   route_table_id = aws_route_table.kafka_public_rt.id
   destination_cidr_block = "0.0.0.0/0"

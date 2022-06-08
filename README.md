@@ -16,3 +16,11 @@ terraform apply --auto-approve
 # For terraform console 
 terraform console
 ```
+### Networking 
+
+Refer `networking/main.tf`
+
+1. Create an Internet Gateway `kafka_internet_gateway` to talk to the outside world in the `vpc`
+2. Create a route table `kafka_public_rt` in the `vpc`
+3. Configure `default_route` route to `kafka_public_rt` route table in the `vpc`
+4. Associate every `subnet` to the route table `kafka_public_rt` 
