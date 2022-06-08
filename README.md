@@ -1,2 +1,3 @@
-# kafka-setup-aws
- A Simplest OpenSource Kafka Setup in AWS 
+
+# Simple OpenSource Kafka Setup in AWS 
+
