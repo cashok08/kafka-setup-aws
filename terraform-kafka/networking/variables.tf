@@ -7,5 +7,10 @@ variable "vpc_cidr" {
 
 # this is sourced from root/variables.tf 
 variable "public_cidrs" {
-  type = list
+  type = list(any)
 }
+variable "access_ip" {
+  type = string
+}
+
+variable "security_groups" {}
