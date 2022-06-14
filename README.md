@@ -40,6 +40,6 @@ In any terminal
 # and save it to /home/ec2-user/.ssh/kafkassh (no passphrase) "kafkassh" is the key name
 ssh-keygen -t rsa
 # Will generate pub and private keys
-
-
+chmod 400 kafkassh
+ssh -i "kafkassh" ec2-user@dns
 ```

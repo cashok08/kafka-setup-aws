@@ -22,7 +22,7 @@ resource "random_id" "kafka_node_id" {
 resource "aws_key_pair" "kafka_ssh_tf_key" {
   key_name = var.key_name
   # using file module to extract the contents of generated key
-  # path can be dynamic
+  # path can be dynamic # moved the .pub manually to same directory
   public_key = file(var.public_key_path)
 }
 
