@@ -43,3 +43,5 @@ ssh-keygen -t rsa
 chmod 400 kafkassh
 ssh -i "kafkassh" ec2-user@dns
 ```
+
+### Userdata

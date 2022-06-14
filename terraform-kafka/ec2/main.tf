@@ -23,6 +23,7 @@ resource "aws_key_pair" "kafka_ssh_tf_key" {
   key_name = var.key_name
   # using file module to extract the contents of generated key
   # path can be dynamic # moved the .pub manually to same directory
+  # should use ${path.root}/
   public_key = file(var.public_key_path)
 }
 
@@ -41,7 +42,12 @@ resource "aws_instance" "kafka_node" {
   vpc_security_group_ids = [var.public_sg]
   subnet_id              = var.public_subnets[count.index]
 
-  # user_data = ""
+  user_data = templatefile(var.user_data_path,
+  {
+    swapvalue = "1"
+  }
+  
+  )
 
   root_block_device {
     volume_size = var.vol_size # 10 default size

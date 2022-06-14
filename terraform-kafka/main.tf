@@ -56,6 +56,7 @@ module "kafkaec2" {
   vol_size       = 10
   key_name = "kafkassh"
   public_key_path = "kafkassh.pub"
+  user_data_path = "${path.root}/userdata.tpl"
 
 
 }
