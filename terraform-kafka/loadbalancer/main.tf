@@ -11,11 +11,17 @@ resource "aws_lb" "kafka_lb" {
 # target group for lb which will receive traffic from listener port of lb
 resource "aws_lb_target_group" "kafka_tg" {
   # Generating a random name but this will make tf to replace :(
+  # should be controlled by lifecycle hooks
   name     = "kafka-lb-tg-${substr(uuid(), 0, 3)}"
   port     = var.kafka_lb_tg_port     # Port numbers should be bootstrap servers port 9092
   protocol = var.kafka_lb_tg_protocol # "HTTP"
   vpc_id   = var.vpc_id               # Get from networking module
 
+  lifecycle {
+    ignore_changes = [name, port]
+    # Create a target group before destroying so that listener function
+    create_before_destroy = true
+  }
   # hardcoded
   health_check {
     healthy_threshold   = var.kafka_lb_healthy_threshold   # 2
@@ -35,4 +41,5 @@ resource "aws_lb_listener" "kafka_lb_listener" {
     type             = "forward"
     target_group_arn = aws_lb_target_group.kafka_tg.arn
   }
+
 }
