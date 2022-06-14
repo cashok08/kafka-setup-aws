@@ -19,17 +19,27 @@ resource "random_id" "kafka_node_id" {
   count       = var.instance_count # we need 1 in each az 
 }
 
+resource "aws_key_pair" "kafka_ssh_tf_key" {
+  key_name = var.key_name
+  # using file module to extract the contents of generated key
+  # path can be dynamic
+  public_key = file(var.public_key_path)
+}
+
 resource "aws_instance" "kafka_node" {
-  count         = var.instance_count # 1
-  instance_type = var.instance_type  # t2.medium
+  count         = var.instance_count
+  instance_type = var.instance_type
   ami           = data.aws_ami.server_ami.id
   tags = {
     # dec is decimal of random id
     Name = "kafka_node - ${random_id.kafka_node_id[count.index].dec}"
   }
   # key_name
-  vpc_security_group_ids = [var.kafka_sg]
-  subnet_id              = var.kafka_subnet[count.index]
+  key_name = aws_key_pair.kafka_ssh_tf_key.id
+
+
+  vpc_security_group_ids = [var.public_sg]
+  subnet_id              = var.public_subnets[count.index]
 
   # user_data = ""
 

@@ -1,5 +1,19 @@
 # -- root/main.tf ----
+# Need to handle better by not declaring the ami here ; redundant should 
+# be in ec2 module
+data "aws_ami" "server_ami" {
+  most_recent = true
+  owners      = ["309956199498"]
+  #ami-0cebc9110ef246a50 rhel 8
+  filter {
+    name = "name"
+    # https://ap-southeast-1.console.aws.amazon.com/ec2/v2/home?region=ap-southeast-1#ImageDetails:imageId=ami-0cebc9110ef246a50
+    #https://ap-southeast-1.console.aws.amazon.com/ec2/v2/home?region=ap-southeast-1#Images:visibility=public-images;v=3;search=:ubuntu,:ami-04d9e855d716f9c99
+    #values = ["ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"]
+    values = ["RHEL-8.5.0_HVM-*-x86_64-0-Hourly2-GP2"]
 
+  }
+}
 
 # Create VPC 
 module "networking" {
@@ -12,6 +26,7 @@ module "networking" {
 
 }
 
+# Creating ELB 
 module "loadbalancer" {
   source           = "./loadbalancer"
   public_sg        = module.networking.public_sg
@@ -27,6 +42,20 @@ module "loadbalancer" {
   kafka_lb_interval            = 30
   kafka_lb_listener_port       = 80 # 443 for SSL
   kafka_lb_listener_protocol   = "HTTP"
+
+
+}
+
+module "kafkaec2" {
+  source         = "./ec2"
+  public_sg      = module.networking.public_sg
+  public_subnets = module.networking.public_subnets
+  instance_count = 3 # one in each az's
+  instance_type  = "t2.medium"
+  ami            = data.aws_ami.server_ami.id
+  vol_size       = 10
+  key_name = "kafkassh"
+  public_key_path = "kafkassh.pub"
 
 
 }
