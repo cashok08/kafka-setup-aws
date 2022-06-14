@@ -6,10 +6,10 @@ data "aws_availability_zones" "available" {
 
 
 
-# To deploy 100 VPCs and each VPC gets a random ID
+# Not used so far
 resource "random_integer" "random" {
   min = 1
-  max = 100
+  max = 5
 
 }
 
@@ -19,7 +19,7 @@ resource "aws_vpc" "kafka_vpc" {
   enable_dns_support   = true
 
   tags = {
-    Name = "kafka_vpc-${random_integer.random.id}"
+    Name = "kafka_vpc"
   }
   # Added the lifecycle hook to ensure tf is not crashed
   lifecycle {
@@ -100,7 +100,7 @@ resource "aws_security_group" "kafka_sg" {
       protocol    = ingress.value.protocol
       cidr_blocks = ingress.value.cidr_blocks
       description = ingress.value.description
-   }
+    }
   }
   egress {
     from_port   = 0

@@ -12,28 +12,28 @@ data "aws_ami" "server_ami" {
 
 resource "random_id" "kafka_node_id" {
   byte_length = 2
-  count = var.instance_count
+  count       = var.instance_count
 }
 
 resource "aws_instance" "kafka_node" {
-    count = var.instance_count # 1
-    instance_type = var.instance_type # t2.medium
-    ami = data.aws_ami.server_ami.id
-    tags = {
-        # dec is decimal of random id
-        Name = "kafka_node - ${random_id.kafka_node_id[count.index].dec}"
-    }
-    # key_name
-    vpc_security_group_ids = [var.kafka_sg]
-    subnet_id = var.kafka_subnet[count.index]
+  count         = var.instance_count # 1
+  instance_type = var.instance_type  # t2.medium
+  ami           = data.aws_ami.server_ami.id
+  tags = {
+    # dec is decimal of random id
+    Name = "kafka_node - ${random_id.kafka_node_id[count.index].dec}"
+  }
+  # key_name
+  vpc_security_group_ids = [var.kafka_sg]
+  subnet_id              = var.kafka_subnet[count.index]
 
-    # user_data = ""
+  # user_data = ""
 
-    root_block_device {
-      volume_size = var.vol_size # 8 
-      
-    }
-  
+  root_block_device {
+    volume_size = var.vol_size # 8 
+
+  }
+
 }
 
 

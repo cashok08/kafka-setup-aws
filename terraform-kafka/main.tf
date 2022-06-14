@@ -13,7 +13,19 @@ module "networking" {
 }
 
 module "loadbalancer" {
-  source = "./loadbalancer"
-  public_sg = module.networking.public_sg
-  public_subnets= module.networking.public_subnets
+  source                     = "./loadbalancer"
+  public_sg                  = module.networking.public_sg
+  public_subnets             = module.networking.public_subnets
+  vpc_id                     = module.networking.vpc_id # from networking output
+  kafka_lb_tg_port           = 9092                     # bootstrap server
+  kafka_lb_tg_protocol       = "HTTP"
+  kafka_lb_healthy_threshold = 2
+
+  kafka_lb_unhealthy_threshold = 2
+  kafka_lb_timeout             = 3
+  kafka_lb_interval            = 30
+  kafka_lb_listener_port       = 80 # 80 to 9092
+  kafka_lb_listener_protocol   = "HTTP"
+
+
 }
