@@ -11,8 +11,9 @@ locals {
 
 locals {
   security_groups = {
-    kafka_sg = {
-      name        = "kafka_sg"
+    /*
+    kafkaaa_sg = {
+      name        = "kafkaaa_sg"
       description = "Security Group for Kafka and Zookeeper access"
       ingress = {
         ssh = {
@@ -43,7 +44,53 @@ locals {
           protocol    = "tcp"
           cidr_blocks = [var.access_ip]
         }
+         custom_tcp3 = {
+          description = "Kafka Broker Topics UI"
+          from        = 8081
+          to          = 8081
+          protocol    = "tcp"
+          cidr_blocks = [var.access_ip]
+        }
+         custom_tcp2 = {
+          description = "Kafka Broker Topics"
+          from        = 8082
+          to          = 8082
+          protocol    = "tcp"
+          cidr_blocks = [var.access_ip]
+        }
+         custom_tcp2 = {
+          description = "Kafka Broker jump"
+          from        = 8000
+          to          = 8000
+          protocol    = "tcp"
+          cidr_blocks = [var.access_ip]
+        }
+      }
+    }*/
+rdsss_sg = {
+      name        = "rdsss_sg"
+      description = "Security Group for RDS"
+      ingress = {
+        
+        custom_tcp = {
+          description = "Ingress access"
+          from        = 5432
+          to          = 5432
+          protocol    = "tcp"
+          cidr_blocks = ["0.0.0.0/0"]
+        }
+      }
+      egress = {
+        
+        custom_tcp = {
+          description = "Egress access"
+          from        = 5432
+          to          = 5432
+          protocol    = "tcp"
+          cidr_blocks = ["0.0.0.0/0"]
+        }
       }
     }
+
   }
 }

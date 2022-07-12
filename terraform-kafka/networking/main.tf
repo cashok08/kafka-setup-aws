@@ -84,8 +84,36 @@ resource "aws_route" "default_route" {
 
   gateway_id = aws_internet_gateway.kafka_internet_gateway.id
 }
-
+/*
 resource "aws_security_group" "kafka_sg" {
+  for_each = var.security_groups
+
+  name        = each.value.name
+  description = each.value.description
+  vpc_id      = aws_vpc.kafka_vpc.id
+  # Do dynamic ingress block 
+  dynamic "ingress" {
+    for_each = each.value.ingress
+    content {
+      from_port   = ingress.value.from
+      to_port     = ingress.value.to
+      protocol    = ingress.value.protocol
+      cidr_blocks = ingress.value.cidr_blocks
+      description = ingress.value.description
+    }
+  }
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  tags = {
+    Name = "kafka_security_groups"
+  }
+}
+*/
+resource "aws_security_group" "scpay_rds_sg" {
   for_each = var.security_groups
 
   name        = each.value.name

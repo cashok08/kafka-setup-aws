@@ -9,5 +9,5 @@ output "public_subnets" {
 }
 
 output "public_sg" {
-  value = aws_security_group.kafka_sg["kafka_sg"].id
+  value = aws_security_group.scpay_rds_sg["rdsss_sg"].id
 }

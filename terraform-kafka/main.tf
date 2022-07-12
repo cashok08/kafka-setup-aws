@@ -27,6 +27,7 @@ module "networking" {
 }
 
 # Creating ELB 
+/*
 module "loadbalancer" {
   source           = "./loadbalancer"
   public_sg        = module.networking.public_sg
@@ -44,8 +45,9 @@ module "loadbalancer" {
   kafka_lb_listener_protocol   = "HTTP"
 
 
-}
+}*/
 
+/*
 module "kafkaec2" {
   source         = "./ec2"
   public_sg      = module.networking.public_sg
@@ -58,5 +60,17 @@ module "kafkaec2" {
   public_key_path = "kafkassh.pub"
   user_data_path = "${path.root}/userdata.tpl"
 
+
+}*/
+
+module "rdsscpay" {
+  source = "./rds"
+  instance_type = "db.t3.micro"
+  rds_engine_type = "postgres"
+  rds_engine_version = "13.4"
+  rds_username = "sc"
+  rds_password = "scPay2025"
+  public_sg = module.networking.public_sg
+  public_subnets = module.networking.public_subnets
 
 }
